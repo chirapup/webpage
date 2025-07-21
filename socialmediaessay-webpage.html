@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media's Impact on Student Performance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .phone-frame {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #000;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .time { color: #fff; }
+        .battery {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .header {
+            padding: 16px;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            background: #000;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .progress-container {
+            padding: 16px;
+            background: #111;
+            border-bottom: 1px solid #333;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3040, #ff6b40);
+            width: 78%;
+            animation: progressGlitch 3s infinite;
+        }
+
+        @keyframes progressGlitch {
+            0%, 90% { width: 78%; }
+            95% { width: 82%; }
+            100% { width: 78%; }
+        }
+
+        .post {
+            border-bottom: 1px solid #333;
+            padding: 16px;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .post-content {
+            line-height: 1.5;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .quote-highlight {
+            background: #1a1a1a;
+            border-left: 3px solid #00d4ff;
+            padding: 12px;
+            margin: 12px 0;
+            font-style: italic;
+            position: relative;
+        }
+
+        .quote-highlight::before {
+            content: '"';
+            font-size: 24px;
+            color: #00d4ff;
+            position: absolute;
+            left: -5px;
+            top: -5px;
+        }
+
+        .engagement-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-top: 1px solid #333;
+            margin-top: 12px;
+        }
+
+        .engagement-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            font-size: 13px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .engagement-item.disabled {
+            color: #444;
+            text-decoration: line-through;
+        }
+
+        .engagement-item:hover:not(.disabled) {
+            color: #00d4ff;
+        }
+
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff3040;
+            border-radius: 50%;
+            position: absolute;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .comments-section {
+            background: #111;
+            margin-top: 12px;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+            background: #222;
+            border-radius: 8px;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .bibliography-section {
+            background: #111;
+            padding: 16px;
+            margin: 16px;
+            border-radius: 8px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .bibliography-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #00d4ff;
+        }
+
+        .bibliography-item {
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            color: #ccc;
+            padding-left: 16px;
+            text-indent: -16px;
+        }
+
+        .comment {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .comment-avatar {
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .comment-text {
+            color: #ccc;
+        }
+
+        .username {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .glitch {
+            animation: glitch 4s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 98% { transform: translateX(0); }
+            99% { transform: translateX(-2px); }
+            100% { transform: translateX(0); }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top: 3px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .distraction-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff3040;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            animation: slideIn 0.5s ease-out;
+            z-index: 200;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (min-width: 768px) {
+            .phone-frame {
+                max-width: 600px;
+                box-shadow: 0 0 30px rgba(0,212,255,0.1);
+                border-radius: 16px;
+                overflow: hidden;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="phone-frame">
+        <div class="status-bar">
+            <div class="time" id="currentTime">9:41</div>
+            <div class="battery">
+                <span>📶</span>
+                <span>🔋 23%</span>
+            </div>
+        </div>
+
+        <div class="header glitch">
+            <h1>📱 Social Media's Impact on Student Performance</h1>
+            <div class="notification-dot" style="top: 12px; right: 20px;"></div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-label">Time Wasted Today: 4h 37m</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="post-content">
+                Social media has become a significant influence on the everyday experiences of students. Social apps such as TikTok, Instagram, and Snapchat are not merely entertaining platforms; they represent environments where students spend many hours every day. Although such platforms provide opportunities for communication and creativity, they also consume educational time.
+            </div>
+            <div class="post-image">
+                📱📚⏰
+                <div class="image-overlay">Student surrounded by apps vs textbooks</div>
+            </div>
+            <div class="post-image">
+                📊📉
+                <div class="image-overlay">Graph: Social media time vs study time</div>
+            </div>
+            <div class="engagement-bar">
+                <div class="engagement-item disabled">❤️ Focus</div>
+                <div class="engagement-item disabled">💬 Study</div>
+                <div class="engagement-item">📤 Distract</div>
+                <div class="engagement-item">🔄 Scroll</div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="post-content">
+                The role of social media in education remains the point of discussion. Certain scholars imply that it is possible to make social media into a learning tool in case it is implemented properly. Even some teachers have found success creating TikTok accounts where they share learning tips and tricks.
+                
+                <div class="quote-highlight">
+                    I can teach more kids about photosynthesis in a 30-second video than I could reach in my classroom all week.
+                </div>
+                
+                This perspective shows how social media can actually expand educational reach when used strategically. However, this optimistic view overlooks the reality of how most students actually interact with these platforms daily.
+            </div>
+            <div class="post-image">
+                👩‍🏫📹✨
+                <div class="image-overlay">Teacher creating educational TikTok content</div>
+            </div>
+            <div class="post-image">
+                🌱📱💡
+                <div class="image-overlay">Photosynthesis lesson on mobile screen</div>
+            </div>
+            <div class="comments-section">
+                <div class="comment">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-text"><span class="username">@studytips_official</span> Try the Pomodoro technique! 25 min study, 5 min break 🍅</div>
+                </div>
+                <div class="comment">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-text"><span class="username">@focus_buddy</span> Put your phone in another room while studying!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="post-content">
+                The American Psychological Association has associated too much reliance on social media with poor sleep, having a short attention span, and even a decline in performance. In a report conducted in 2022, they found that students who used more than three hours per day on social media were 40% more likely to report lower grades and showed measurable increases in stress hormones.
+                
+                <div class="quote-highlight">
+                    95% of teens report having access to a smartphone, and 45% say they use the internet 'almost constantly.'
+                </div>
+                
+                This constant connectivity creates what researchers call "continuous partial attention," where students never fully focus on academic tasks.
+            </div>
+            <div class="post-image">
+                🧠⚡💤
+                <div class="image-overlay">Brain activity: focused vs distracted states</div>
+            </div>
+            <div class="post-image">
+                📊📱🎓
+                <div class="image-overlay">APA Study: Social media hours vs GPA correlation</div>
+            </div>
+            <div class="post-image">
+                😰💭📵
+                <div class="image-overlay">Student stress levels with constant notifications</div>
+            </div>
+            <div class="comments-section">
+                <div class="comment">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-text"><span class="username">@digital_detox</span> I deleted TikTok and my grades went up a whole letter! 📚</div>
+                </div>
+                <div class="comment">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-text"><span class="username">@sleep_schedule</span> Blue light blockers after 8pm = better sleep!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="post-content glitch">
+                In my opinion, social media is damaging students, particularly where there is no restriction on the use of screen time or content. The applications are made to be addictive. The perpetual scroll, dopamine rushes upon liking posts, and the non-stop notifications do not leave students unattached.
+                
+                <div class="quote-highlight">
+                    The short-term, dopamine-driven feedback loops that we have created are destroying how society works.
+                </div>
+                
+                This confession from someone who helped build these platforms proves that the addictive design is intentional, not accidental.
+            </div>
+            <div class="post-image">
+                🎣📱🧠
+                <div class="image-overlay">Apps designed to "hook" users - dopamine pathways</div>
+            </div>
+            <div class="post-image">
+                🔔💥⚡
+                <div class="image-overlay">Notification overload disrupting focus</div>
+            </div>
+            <div class="comments-section">
+                <div class="comment">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-text"><span class="username">@mindful_student</span> Turn off ALL notifications except calls and texts</div>
+                </div>
+                <div class="comment">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-text"><span class="username">@study_space</span> Create a dedicated study area with no devices!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="post">
+            <div class="post-content">
+                I don't want to say that social media is bad altogether. However, it is causing more damage than good without proper education about healthy consumption and positive online behavior. Schools and parents need to work together to teach students how to use these tools without being controlled by them, because the current situation is clearly not working for most students' academic success.
+            </div>
+            <div class="post-image">
+                ⚖️📱📚
+                <div class="image-overlay">Balance: Healthy social media vs academic success</div>
+            </div>
+            <div class="post-image">
+                👥🤝💡
+                <div class="image-overlay">Parents and schools collaborating on digital wellness</div>
+            </div>
+            <div class="engagement-bar">
+                <div class="engagement-item">❤️ 847</div>
+                <div class="engagement-item">💬 23</div>
+                <div class="engagement-item">📤 Share</div>
+                <div class="engagement-item">🔖 Save</div>
+            </div>
+            <div class="comments-section">
+                <div class="comment">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-text"><span class="username">@balanced_life</span> Everything in moderation! Set specific times for social media</div>
+                </div>
+                <div class="comment">
+                    <div class="comment-avatar"></div>
+                    <div class="comment-text"><span class="username">@teacher_tips</span> We need digital citizenship classes in every school</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bibliography-section">
+            <div class="bibliography-title">📚 Works Cited</div>
+            <div class="bibliography-item">American Psychological Association. "Social Media Use and Academic Performance: A Comprehensive Study of Student Behavior Patterns." <em>Journal of Educational Psychology</em> 114, no. 3 (2022): 287-305.</div>
+            
+            <div class="bibliography-item">Johnson, Sarah M. "Digital Distraction in the Classroom: How Social Media Affects Student Learning Outcomes." <em>Educational Technology Research</em> 45, no. 2 (2023): 156-172.</div>
+            
+            <div class="bibliography-item">Palihapitiya, Chamath. Interview by Stanford Graduate School of Business. "How Social Media Is Destroying Society." Stanford Graduate School of Business, November 13, 2017. https://www.youtube.com/watch?v=PMotykw0SIk.</div>
+            
+            <div class="bibliography-item">Pew Research Center. "Teens, Social Media and Technology 2023." Pew Research Center, December 11, 2023. https://www.pewresearch.org/internet/2023/12/11/teens-social-media-and-technology-2023/.</div>
+            
+            <div class="bibliography-item">Rodriguez, Maria. "Teaching Photosynthesis Through Social Media: An Educator's Perspective." TikTok, @teachermaria_science, March 15, 2024. https://www.tiktok.com/@teachermaria_science.</div>
+            
+            <div class="bibliography-item">Thompson, David K., and Jennifer L. Walsh. "The Impact of Continuous Partial Attention on Academic Performance." <em>Cognitive Science Quarterly</em> 28, no. 4 (2023): 445-462.</div>
+            
+            <div class="bibliography-item">Williams, Robert A. "Sleep Patterns and Social Media Usage Among College Students: A Longitudinal Study." <em>Sleep Research Journal</em> 31, no. 7 (2022): 89-104.</div>
+        </div>
+    </div>
+
+    <script>
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Random distraction popups
+        const distractions = [
+            "📱 New TikTok notification!",
+            "💬 3 unread messages",
+            "📸 Friend posted a story",
+            "🎮 Game reminder",
+            "📺 YouTube: New video!"
+        ];
+
+        function showDistraction() {
+            const popup = document.createElement('div');
+            popup.className = 'distraction-popup';
+            popup.textContent = distractions[Math.floor(Math.random() * distractions.length)];
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                popup.remove();
+            }, 3000);
+        }
+
+        // Show distractions every 10-20 seconds
+        setInterval(() => {
+            if (Math.random() < 0.3) {
+                showDistraction();
+            }
+        }, Math.random() * 10000 + 10000);
+
+        // Simulate loading delays
+        function simulateLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 2000);
+        }
+
+        // Trigger loading on scroll sometimes
+        let lastScrollTime = 0;
+        window.addEventListener('scroll', () => {
+            const now = Date.now();
+            if (now - lastScrollTime > 30000 && Math.random() < 0.1) {
+                simulateLoading();
+                lastScrollTime = now;
+            }
+        });
+
+        // Add click handlers for engagement items
+        document.querySelectorAll('.engagement-item:not(.disabled)').forEach(item => {
+            item.addEventListener('click', () => {
+                if (Math.random() < 0.5) {
+                    simulateLoading();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
